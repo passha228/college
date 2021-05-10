@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Class_tree.dir/Btree.cpp.o CMakeFiles/Class_tree.dir/test.cpp.o CMakeFiles/Class_tree.dir/STree.cpp.o -o Class_tree 

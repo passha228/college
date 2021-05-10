@@ -1,0 +1,3 @@
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/cmake-build-debug/CMakeFiles/Class_tree.dir

@@ -1,0 +1,4 @@
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/clion-2021.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/cmake-build-debug

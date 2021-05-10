@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/Btree.h
+Node.h
+../include/Node.h
+GL/glut.h
+../include/GL/glut.h
+
+../include/Node.h
+iostream
+-
+vector
+-
+
+../include/STree.h
+Btree.h
+../include/Btree.h
+
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/test.cpp
+iostream
+-
+Btree.h
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/Btree.h
+STree.h
+/run/media/passha228/0eb0e76e-d415-4444-82f0-f4c4c5e00dc5/C++/college/tree_ver2/STree.h
+
