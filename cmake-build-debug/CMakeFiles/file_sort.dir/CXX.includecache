@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/work/C++/college/file_sort/Header.h
+iostream
+-
+fstream
+-
+ctime
+-
+string
+-
+vector
+-
+
+D:/work/C++/college/file_sort/main.cpp
+iostream
+-
+fstream
+-
+Header.h
+D:/work/C++/college/file_sort/Header.h
+

@@ -1,0 +1,3 @@
+D:/work/C++/college/file_sort/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/work/C++/college/file_sort/cmake-build-debug/CMakeFiles/file_sort.dir
+D:/work/C++/college/file_sort/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,3 @@
+"D:\work\clion\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\file_sort.dir/objects.a
+D:\program\MinGW\bin\ar.exe cr CMakeFiles\file_sort.dir/objects.a @CMakeFiles\file_sort.dir\objects1.rsp
+D:\program\MinGW\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\file_sort.dir/objects.a -Wl,--no-whole-archive -o file_sort.exe -Wl,--out-implib,libfile_sort.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\file_sort.dir\linklibs.rsp
