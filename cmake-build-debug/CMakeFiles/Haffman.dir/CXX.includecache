@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/Node.h
+iostream
+-
+vector
+-
+string
+../include/string
+iostream
+-
+set
+-
+map
+-
+
+D:/TSU/all_labs/Haffman/Node.cpp
+Node.h
+D:/TSU/all_labs/Haffman/Node.h
+typeinfo
+D:/TSU/all_labs/Haffman/typeinfo
+
