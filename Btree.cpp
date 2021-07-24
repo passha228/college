@@ -11,14 +11,10 @@ Btree::Btree()
 	root = nullptr;
 }
 
-Btree::Btree(map<char, int> m) {
-    auto i = m.begin();
-    root = new Node(i->second,i->first);
-    i++;
-    root->next = create_node(i,m);
+Btree::Btree(Node *node) {
+
 }
 
-//ôóíêöèÿ äëÿ êîïèðîâàíèÿ äåðåâà
 Node* Btree::create_node(map<char, int>::iterator i, map<char, int> m)
 {	if (i == m.end())
         return nullptr;
@@ -51,7 +47,7 @@ Node* Btree::create_node(map<char, int>::iterator i, map<char, int> m)
 
 Node* Btree::search(Node* p1, int _key)
 {
-    Node *p=0;
+    Node *p=nullptr;
     if (p1->value == _key) return p1;
     if (p1->left) p=search(p1->left, _key);
     if (p) return p;
@@ -61,8 +57,8 @@ Node* Btree::search(Node* p1, int _key)
 
 Node* Btree::Search(int _key)
 {
-    if (!root) return 0;
-    Node *p=0;
+    if (!root) return nullptr;
+    Node *p=nullptr;
     if (root->value == _key) return root;
     if (root->left) p=search(root->left, _key);
     if (p) return p;
@@ -99,8 +95,7 @@ void Btree::del_node1(Node* node)
 {
 	Node* pr = node->par;
 	if (!node->left && !node->right)     // p - ëèñò
-		if (pr->left == node) pr->left = 0;
-		else  pr->right = 0;
+        pr->left == node ? pr->left : pr->right = nullptr;
 	else  // p – íå ëèñò, ó íåãî 1 ïîòîìîê
 	{
 		Node* s;
@@ -114,7 +109,7 @@ void Btree::del_node1(Node* node)
 
 void Btree::del_node2(Node* p)
 {
-	Node* s, * t, * pr = p->par;
+	Node* s, * pr = p->par;
 	s = p->right;
 	if (!s->left)
 	{
@@ -222,10 +217,6 @@ Node* Btree::detour3_postOrder(Node* node)
 	else return nullptr;
 }
 
-void Btree::Add_after(int value, char c_value, char after_c_value) {
-    Search(after_c_value);
-
-}
 
 Node *Btree::Search(char val) {
     if (!root) return nullptr;
@@ -239,7 +230,7 @@ Node *Btree::Search(char val) {
 
 Node* Btree::search(Node* p1, char _key)
 {
-    Node *p=0;
+    Node *p=nullptr;
    // if (p1->c_value == _key) return p1;
     if (p1->left) p=search(p1->left, _key);
     if (p) return p;
@@ -314,14 +305,66 @@ void Btree::print_tree(Node * n, Trunk * prev, bool isLeft) {
         print_tree(root->left, trunk, false);
 }
 
-void Btree::haffman(map<char, int> m) {
-    while(true)
+void Btree::haffman() {
+    map<const char, string> res = this->bin();
+    for(const auto& i : res)
     {
-        
-        pair<int, char>  pair1;
-
-
-
-        return;
+        cout << i.first << i.second;
     }
+}
+
+
+
+map<const char, string> Btree::bin() {
+
+}
+
+void Btree::Split(string s) {
+    int mas[256] = {0};
+    for(auto i: s)
+    {
+        mas[i]++;
+    }
+    //далее превращаем mas в Node
+    int i = 0;
+    root = new Node;
+    for(i; i < 256; i++)
+        if(mas[i])
+        {
+            this->root->value = mas[i];
+            this->root->c_value = static_cast<char>(i);
+            break;
+        }
+
+    root->next = split(mas, ++i);
+
+    for(Node *a = root; a != nullptr; a = a->next)
+    {
+        cout << a->value << ' ' << a->c_value << '\n';
+    }
+}
+
+Node* Btree::split(const int* mas, int i) {
+    if (i >= 256)
+    {
+        return nullptr;
+    }
+    Node *node = new Node;
+    for (i; i < 256; i++)
+    {
+        if(mas[i]) {
+           // Node *node1 = new Node;
+
+//            node1->c_value = static_cast<char>(i);
+//            node1->value = mas[i];
+//            node = node1;
+
+            node->c_value = static_cast<char>(i);
+            node->value = mas[i];
+            break;
+        }
+    }
+    if(i < 256)
+        node->next =  split(mas, ++i);
+    return node;
 }

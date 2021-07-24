@@ -6,23 +6,27 @@
 
 #IncludeRegexTransform: 
 
-../include/Node.h
+D:/TSU/all_labs/Haffman/Btree.cpp
+include/Btree.h
+D:/TSU/all_labs/Haffman/include/Btree.h
+random
+-
+
+D:/TSU/all_labs/Haffman/include/Btree.h
+Node.h
+D:/TSU/all_labs/Haffman/include/Node.h
+map
+D:/TSU/all_labs/Haffman/include/map
+
+D:/TSU/all_labs/Haffman/include/Node.h
 iostream
 -
 vector
 -
 string
-../include/string
+D:/TSU/all_labs/Haffman/include/string
 iostream
 -
 set
 -
-map
--
-
-D:/TSU/all_labs/Haffman/Node.cpp
-Node.h
-D:/TSU/all_labs/Haffman/Node.h
-typeinfo
-D:/TSU/all_labs/Haffman/typeinfo
 
