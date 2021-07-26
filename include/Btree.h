@@ -13,9 +13,7 @@ public:
 
     explicit Btree(Node *node);
 
-    void Add_after(int value, char c_value, char after_c_value);
-
-    __attribute__((unused)) virtual void Add(int value);
+    virtual void Add(int value);
 
     virtual Node* Search(int value);
 
@@ -39,11 +37,13 @@ protected:
     Node* detour3_postOrder(Node* node);
     virtual Node* search(Node *p1, int _key);
 private:
-
+    Node* not_leaf(Node*& what, Node*& where);
+    void sort();
     Node* split(const int * mas, int i);
     map<const char, string> bin();
     Node* search(Node*, char);
     void add(int value, Node* node);
+
 };
 
 
