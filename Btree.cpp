@@ -11,10 +11,6 @@ Btree::Btree()
 	root = nullptr;
 }
 
-Btree::Btree(Node *node) {
-
-}
-
 Node* Btree::create_node(map<char, int>::iterator i, map<char, int> m)
 {	if (i == m.end())
         return nullptr;
@@ -166,55 +162,13 @@ Btree::~Btree()
     delete root;
 }
 
-
-////////////////////////////////////////////////////////////////////
-//				добавление 										////
-////////////////////////////////////////////////////////////////////
-
-void Btree::Add(int value)
-{
-	if (!root) {
-	    root = new Node(value);
-	    return; }
-	if (!root->left) {
-	    root->left = new Node(value);
-        root->left->par = root;
-	    return;
-	}
-	if (!root->right) {
-	    root->right = new Node(value);
-        root->right->par = root;
-        return; }
-	if (rand() % 2) return add(value, root->left);
-	else  return  add(value, root->right);
-}
-
-void Btree::add(int value, Node* node)
-{
-	if (!node->left) {
-	    node->left = new Node(value);
-        node->right->par = node;
-	    return; }
-	if (!node->right) {
-	    node->right = new Node(value);
-        node->right->par = node;
-	    return; }
-	if (rand() % 2)
-	    return add(value, node->left);
-	else
-	    return  add(value, node->right);
-}
-
-
-
 Node* Btree::detour3_postOrder(Node* node)
 {
-	if (node) {
-		detour3_postOrder(node->left);
-		detour3_postOrder(node->right);
-		return node;
-	}
-	else return nullptr;
+    if (node == nullptr) return nullptr;
+    detour3_postOrder(node->left);
+    detour3_postOrder(node->right);
+    delete node;
+    node = nullptr;
 }
 
 
@@ -324,18 +278,16 @@ void Btree::haffman() {
             this->root->right = new Node;
             this->root->right->value = this->root->next->value;
             this->root->right->c_value = this->root->next->c_value;
-            //работа со значениями в списке
-            this->root->char_set.insert(this->root->c_value);
-            this->root->next->char_set.insert(this->root->next->c_value);
         }
         //если следующий элемент лист
         else if(this->root->next->c_value != 0)
         {
             //левое поддерево
             this->not_leaf(root, root->left);
-            Node * node = new Node;
-            this->root->right = node;
+
             //правое поддерево
+            this->detour3_postOrder(this->root->right);
+            this->root->right = new Node;
             this->root->right->value = this->root->next->value;
             this->root->right->c_value = this->root->next->c_value;
         }
@@ -343,18 +295,17 @@ void Btree::haffman() {
         else if(this->root->c_value != 0)
         {
             //левое поддерево
-            root->left = this->not_leaf(root->next, root->left);
+            this->not_leaf(root->next, root->left);
             //правое поддерево
-            //this->root->right = new Node;
-            //написать оператор=, чтобы копировал значение и поддеревья, не адрес
+            this->root->right = new Node;
             this->root->right->value = root->value;
             this->root->right->c_value = this->root->c_value;
         }
         //если оба не лист
         else
         {
-            root->left = this->not_leaf(root, root->left);
-            root->right = this->not_leaf(root->next, root->right);
+            this->not_leaf(root, root->left);
+            this->not_leaf(root->next, root->right);
         }
         this->root->c_value = 0;
         this->root->value+=this->root->next->value;
@@ -394,11 +345,20 @@ void Btree::sort(){
     root = new_root;
 }
 
-map<const char, string> Btree::bin() {
+void Btree::bin(Node* node, map<const char, string>& a, string s) {
+    if (node == nullptr)
+        return;
+    bin(node->left, a, s + '0');
+    bin(node->right, a, s + '1');
+    //вполне достаточно node->c_value != 0, однако для надежности еще проверяю левый правый узлы
+    if (node->c_value != 0 && node->right == nullptr && node->left == nullptr)
+    {
+        a.insert(make_pair(node->c_value, s));
+    }
 
 }
 
-void Btree::Split(string s) {
+void Btree::Split(const string& s) {
     int mas[256] = {0};
     for(auto i: s)
     {
@@ -412,12 +372,10 @@ void Btree::Split(string s) {
         {
             this->root->value = mas[i];
             this->root->c_value = static_cast<char>(i);
-            this->root->char_set.insert(static_cast<char>(i));
             break;
         }
 
     root->next = split(mas, ++i);
-
 //    for(Node *a = root; a != nullptr; a = a->next)
 //    {
 //        cout << a->value << ' ' << a->c_value << '\n';
@@ -436,7 +394,6 @@ Node* Btree::split(const int* mas, int i) {
             node = new Node;
             node->c_value = static_cast<char>(i);
             node->value = mas[i];
-            this->root->char_set.insert(static_cast<char>(i));
             break;
         }
     }
@@ -445,45 +402,62 @@ Node* Btree::split(const int* mas, int i) {
     return node;
 }
 
-//сделать рекурсивное определение, тупое копирование адресов не сработал
-Node* Btree::not_leaf(Node*& what, Node*& where)
-{
-    //Node *node = new Node;
 
-    if (where->left != nullptr && where->right != nullptr)
-    {
-        int a[2] = {0,0};
-        for(Node * node = what; node != nullptr; node = node->left)
-            a[1]++;
-        for(Node * node = what; node != nullptr; node = node->right)
-            a[2]++;
-        where->left = what->left;//<-------------
-        where->right = what->right;//<-------------
-        //костыль адресации, когда компилятор выполнял строчки выше то возникало рекурсивное определение
-        Node*& node1 = where;
-        for(int i = 0;i < a[1];i++)
-            node1 = node1->left;
-        node1->left = nullptr;
-        node1 = where;
-        for(int i = 0; i < a[2]; i++)
-            node1 = node1 = node1->left;
-        node1->right = nullptr;
-    }
-    else
-    {
-        int a = 0;
-        for(Node * node = what; node != nullptr; node = node->left)
-            a++;
-        where->left = new Node;
-        where->left = what->left;
-        where->right = new Node;
-        where->right = what->right;
-        //костыль адресации, когда компилятор выполнял строчки выше то возникало рекурсивное определение
-        Node*& node1 = where;
-        for(int i = 0;i < a;i++)
-            node1 = node1->left;
-        node1->left = nullptr;
-    }
-    //where->c_value = 0;
+
+//сделать рекурсивное определение, тупое копирование адресов не сработал
+Node* Btree::not_leaf(Node*& node, Node*& where)
+{
+    Node* new_node = nullptr;
+    this->preOrder(node, new_node);
+    this->detour3_postOrder(where);
+    where = new_node;
     return nullptr;
+}
+
+void Btree::preOrder(Node *node, Node*& save) {
+    if (node == nullptr)
+        return;
+    if(save == nullptr)
+        save = new Node;
+    save->value = node->value;
+    save->c_value = node->c_value;
+    preOrder(node->left,save->left);
+    preOrder(node->right,save->right);
+}
+
+string Btree::Haffman(const string& s) {
+    //вытащили все символы и узнали их длину
+    this->Split(s);
+    //разбили в дерево в зависимости от длины символа
+    this->haffman();
+    //составить пару символ -> бинарный код
+    map<const char, string> a;
+//    for(int i = 0; i < 256; i++)
+//    {
+//        if(mas[i] != 0) {
+//            a.insert(make_pair(static_cast<const char>(mas[i]), ""));
+//        }
+//
+//    }
+//    for(const auto& i: a)
+//    {
+//        cout << i.first << ' ' << i.second;
+//    }
+    this->bin(root, a, "");
+    for(auto i : a)
+    {
+        cout << i.first << ' ' << i.second << '\n';
+    }
+    cout << s << '\n';
+    //вернуть закодированное сообщение
+    return this->coding(a, s);
+}
+
+string Btree::coding(map<const char, string> a, const string& s) {
+    string new_string;
+    for(const char i : s)
+    {
+        new_string+=a[i];
+    }
+    return new_string;
 }

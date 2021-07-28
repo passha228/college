@@ -7,9 +7,9 @@ using namespace std;
 
 int main()
 {
-    Btree node;
-    node.Split("1223334444");
-    node.haffman();
-    system(0);
+//    Btree node;
+//    cout << node.Haffman("133322444455555");
+    Btree node1;
+    cout << node1.Haffman("Julia, I love you");
 }
 

@@ -15,10 +15,8 @@ class Node
 
 public:
 	explicit Node(int _value = 0,char _c_value = 0, Node* _right = nullptr, Node* _left = nullptr, Node* _par = nullptr,Node* _next = nullptr);
-    Node& operator=(const Node* node);
 private:
     int value;
-    set<char> char_set;
     char c_value;
     Node* right;
     Node* left;

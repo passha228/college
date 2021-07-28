@@ -12,7 +12,7 @@ public:
     Btree();
 
     explicit Btree(Node *node);
-
+    string Haffman(const string& s);
     virtual void Add(int value);
 
     virtual Node* Search(int value);
@@ -24,8 +24,8 @@ public:
 
     void print_tree(Node* n, Trunk *prev, bool isLeft);
 
-    void haffman();
-    void Split(string s);
+
+
     ~Btree();
 protected:
     virtual Node* create_node(map<char, int>::iterator i, map<char, int>);
@@ -34,16 +34,20 @@ protected:
     static void change_link(Node* p, Node* s);
     static void del_node1(Node* node);
     static void del_node2(Node* node);
-    Node* detour3_postOrder(Node* node);
+
     virtual Node* search(Node *p1, int _key);
 private:
-    Node* not_leaf(Node*& what, Node*& where);
+    void Split(const string& s);
+    void haffman();
+    Node* detour3_postOrder(Node* node);
+    void preOrder(Node*node, Node*& save);
+    Node* not_leaf(Node*& node, Node*& where);
     void sort();
     Node* split(const int * mas, int i);
-    map<const char, string> bin();
+    void bin(Node*, map<const char, string>& a, string s);
     Node* search(Node*, char);
     void add(int value, Node* node);
-
+    string coding(map<const char, string>, const string&);
 };
 
 
