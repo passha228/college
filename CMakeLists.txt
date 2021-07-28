@@ -10,5 +10,5 @@ add_executable(Haffman
 
         main.cpp
         Btree.cpp
-
-        Node.cpp)
+        Node.cpp
+        )

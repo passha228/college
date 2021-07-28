@@ -1,10 +1,8 @@
 #ifndef CLASS_TREE_NODE_H
 #define CLASS_TREE_NODE_H
 #include <iostream>
-#include <vector>
 #include "string"
-#include <iostream>
-#include <set>
+#include "map"
 
 using namespace std;
 class Btree;
