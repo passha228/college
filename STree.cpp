@@ -9,7 +9,7 @@ STree::STree() {
     root = nullptr;
 }
 
-[[maybe_unused]] STree::STree(int value) {
+STree::STree(int value) {
     root = new Node;
     root->value = value;
 }

@@ -8,20 +8,20 @@
 
 
 
-class [[maybe_unused]] STree : public Btree{
+class STree : public Btree{
 public:
 
     STree();
 
-    [[maybe_unused]] __attribute__((unused)) explicit STree(int value);
+    explicit STree(int value);
 
-    __attribute__((unused)) STree(int* mas, int n);
+    STree(int* mas, int n);
 
-    __attribute__((unused)) explicit STree(vector<int> mas);
+    explicit STree(vector<int> mas);
 
-    __attribute__((unused)) STree(const STree& tree);
+    STree(const STree& tree);
 
-    void Add(int val);
+    virtual void Add(int val) override;
 
     int Max() override;
 
@@ -30,9 +30,9 @@ public:
     Node* Search(int val) override;
     //~STree();
 protected:
-    Node* add(Node * node, int val);
-private:
 
+private:
+    virtual Node* add(Node * node, int val);
 };
 
 

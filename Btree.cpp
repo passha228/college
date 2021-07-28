@@ -11,12 +11,12 @@ Btree::Btree()
 	root = nullptr;
 }
 
-__attribute__((unused)) Btree::Btree(int value)
+Btree::Btree(int value)
 {
 	root = new Node(value);
 }
 
-__attribute__((unused)) Btree::Btree(int* mas, int n)
+Btree::Btree(int* mas, int n)
 {
 	root = new Node(mas[0]);
 	int i = 1;
@@ -45,7 +45,7 @@ __attribute__((unused)) Btree::Btree(int* mas, int n)
 	}
 }
 
-__attribute__((unused)) Btree::Btree(vector<int> mas)
+Btree::Btree(vector<int> mas)
 {
 	root = new Node(mas[0]);
 	int i = 1;
@@ -75,7 +75,7 @@ __attribute__((unused)) Btree::Btree(vector<int> mas)
 
 }
 
-__attribute__((unused)) Btree::Btree(const Btree& tree)
+Btree::Btree(const Btree& tree)
 {
 	root = new Node(tree.root->value);
 	root->left = create_node(tree.root->left, root);
@@ -151,54 +151,6 @@ int Btree::min(Node* node, int max)
     }
     return _min;
 }
-
-//int Btree::max(Node* node, int max)
-//{
-//    int _max = node->value;
-//    if (node) {
-//        int locale = _max;
-//
-//        node->left ? locale = max(node->left, _max) : 0;
-//        _max > locale ? _max = _max: _max = locale;
-//
-//        node -> right? locale = detour_preOrder(node->right, func) : 0;
-//        _max > locale ? _max = _max: _max = locale;
-//    }
-//    return _max;
-//}
-//
-//int Btree::Max()
-//{
-//	//int (Btree:: *maxim)(Node * node, int max) = max;
-//	return detour_preOrder(root, &Btree::max);
-//}
-//
-//int Btree::min(Node* node, int min)
-//{
-//	min > node->value ? min = node->value : min;
-//	return min;
-//}
-//
-//int Btree::Min()
-//{
-//	return detour_preOrder(root, &Btree::min);
-//}
-//
-//
-//int Btree::detour_preOrder( Node* node, int (Btree::*func)(Node*, int))
-//{
-//	int _max = node->value;
-//	if (node) {
-//	    int locale = _max;
-//
-//		node->left ? locale = detour_preOrder(node->left, func) : 0;
-//         _max > locale ? _max = _max: _max = locale;
-//
-//		node -> right? locale = detour_preOrder(node->right, func) : 0;
-//        _max > locale ? _max = _max: _max = locale;
-//	}
-//	return _max;
-//}
 
 
 ////////////////////////////////////////////////////////////////////
@@ -284,7 +236,7 @@ void Btree::del_node2(Node* p)
 {
 	Node* s, * t, * pr = p->par;
 	s = p->right;
-	if (!s->left)  // ó s íå ëåâîãî ïîääåðåâà
+	if (!s->left)
 	{
 		s->left = p->left; s->left->par = s;
 		if (pr->left == p) pr->left = s;
@@ -305,11 +257,13 @@ void Btree::delete_root() {
         Node* node = root->right;
         delete root;
         root = node;
+        root->par = nullptr;
     }
     else if(root->right == nullptr && root->left != nullptr) {
         Node* node = root->left;
         delete root;
         root = node;
+        root->par = nullptr;
     }
     else
     {
@@ -334,7 +288,7 @@ Btree::~Btree()
         if(root->right!=nullptr)
             this->Del(root->right->value);
     }
-    delete[]root;
+    delete root;
 }
 
 
@@ -389,15 +343,32 @@ Node* Btree::detour3_postOrder(Node* node)
 }
 
 
+void Btree::print2DUtil(Node *node, int space)
+{
+    // Base case
+    if (node == nullptr)
+        return;
 
+    // Increase distance between levels
+    space += 10;
 
-//__attribute__((unused)) void Btree::Print_tree() {
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    glBegin(GL_POLYGON);
-//    glVertex3f(0.5, 0.0, 0.5);
-//    glVertex3f(0.5, 0.0, 0.0);
-//    glVertex3f(0.0, 0.5, 0.0);
-//    glVertex3f(0.0, 0.0, 0.5);
-//    glEnd();
-//    glFlush();
-//}
+    // Process right child first
+    print2DUtil(node->right, space);
+
+    // Print current node after space
+    // count
+    cout<<endl;
+    for (int i = 10; i < space; i++)
+        cout<<" ";
+    cout<<node->value<<"\n";
+
+    // Process left child
+    print2DUtil(node->left, space);
+}
+
+// Wrapper over print2DUtil()
+void Btree::print2D()
+{
+    // Pass initial space count as 0
+    print2DUtil(root, 0);
+}
