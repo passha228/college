@@ -1,23 +1,22 @@
 #include "include/Btree.h"
 #include <random>
 #include <ctime>
-#include <utility>
 
 ////////////////////////////////////////////////////////////////////
 //						конструкторы 							////
 ////////////////////////////////////////////////////////////////////
 
-Btree::Btree()
+[[maybe_unused]] Btree::Btree()
 {
 	root = nullptr;
 }
 
-Btree::Btree(int value)
+[[maybe_unused]] Btree::Btree(int value)
 {
 	root = new Node(value);
 }
 
-Btree::Btree(int* mas, int n)
+[[maybe_unused]] Btree::Btree(int* mas, int n)
 {
     vector<int> a;
     for(int i = 0; i < n; i++) {
@@ -26,14 +25,14 @@ Btree::Btree(int* mas, int n)
     constructor1(a);
 }
 
-Btree::Btree(vector<int> mas)
+[[maybe_unused]] Btree::Btree(vector<int> mas)
 {
     if(this->root != nullptr)
         this->~Btree();
     constructor1(std::move(mas));
 }
 
-Btree::Btree(const Btree& tree)
+[[maybe_unused]] Btree::Btree(const Btree& tree)
 {
 	root = new Node(tree.root->value);
 	root->left = create_node(tree.root->left, root);
@@ -84,6 +83,8 @@ void Btree::constructor1(vector<int> mas) {
 
 Btree& Btree::operator=(const Btree& tree)
 {
+    if(&tree == this)
+        return *this;
     if(root!= nullptr)
 	    this->~Btree();
     root = new Node(tree.root->value);
@@ -92,7 +93,9 @@ Btree& Btree::operator=(const Btree& tree)
 	return *this;
 }
 
+bool Btree::operator==(const Btree &tree){
 
+}
 ////////////////////////////////////////////////////////////////////
 //						минимум максимум						////
 ////////////////////////////////////////////////////////////////////
@@ -170,7 +173,7 @@ Node* Btree::Search(int _key)
 //				удаление ключа									////
 ////////////////////////////////////////////////////////////////////
 
-void Btree::Del(int value)
+[[maybe_unused]] void Btree::Del(int value)
 {
     Node *p = Search(value);
     if (p==root)  delete_root();
@@ -326,7 +329,7 @@ void Btree::add(int value, Node* node)
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-Node* Btree::detour3_postOrder(Node* node)
+[[maybe_unused]] Node* Btree::detour3_postOrder(Node* node)
 {
     if (node == nullptr) return nullptr;
     detour_inOrder(node->left);
