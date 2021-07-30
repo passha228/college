@@ -19,8 +19,6 @@ public:
 
     explicit STree(vector<int> mas);
 
-    STree(const STree& tree);
-
     virtual void Add(int val) override;
 
     int Max() override;

@@ -1,40 +1,25 @@
 #include <iostream>
-#include "Btree.h"
-#include "STree.h"
-
-/*template <class T>
-void test();*/
+#include <ctime>
+#include "AVL.h"
 
 using namespace std;
 
 
 int main() {
+    cout << "Btree 0,1,2,3,4,5,6,7,8,9\n";
+    int a[10] = {0,1,2,3,4,5,6,7,8,9};
+    Btree tree(a, 10);
+    cout << tree.Max() << ' ';
+    cout << tree.Min() << '\n';
+    Node * node = tree.Search(5);
+    tree.Add(node);
+    tree.Print();
+    cout << '\n';
+    //////////////////////////////////////////
 
-//    Btree tree(10);
-//    tree.Add(20);
-//    cout << tree.Max();
-//    Btree tree1 = tree;
-//    cout << tree1.Max() << endl;
-//    cout << tree.Min();
+    cout << "Stree 0,1,2,3,4,5,6,7,8,9\n";
+    STree stree(a, 10);
+    STree stree1(stree);
 
-    int mas[7] = {10,15,20,5,7,8,35};
-    STree tree(mas, 7);
-    STree tree1;
-    cout << tree.Min() << endl;
-    cout << tree.Max() << endl;
-    tree1 = tree;
-    //tree.Del(35);
-    tree.Del(5);
     return 0;
 }
-
-
-
-
-/*template <class T>
-void test(T test, T test1)
-{
-    test.Add(10);
-    
-
-}*/

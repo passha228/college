@@ -32,12 +32,6 @@ STree::STree(vector<int> mas) {
     }
 }
 
-STree::STree(const STree &tree) {
-    root = new Node;
-    root->value=tree.root->value;
-    root->left = Btree::create_node(tree.root->left, root);
-    root->right = create_node(tree.root->right, root);
-}
 
 void STree::Add(int val) {
     if(root == nullptr) {

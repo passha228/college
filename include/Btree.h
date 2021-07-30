@@ -5,7 +5,7 @@
 #define CLASS_TREE_BTREE_H
 #include "Node.h"
 
-
+struct Trunk;
 
 class Btree
 {
@@ -25,7 +25,7 @@ public:
 
 
     virtual void Add(int value);
-
+    virtual void Add(Node * node);
     virtual int Max();
 
     virtual int Min();
@@ -34,26 +34,30 @@ public:
 
     void Del(int);
 
-    void print2D();
+    void Print();
     //??????????
     ~Btree();
 protected:
-    virtual Node* create_node(Node* tmp, Node* pp);
+    Node* create_node(Node* tmp, Node* pp);
     Node* root;
     void delete_root();
     static void change_link(Node* p, Node* s);
     static void del_node1(Node* node);
     static void del_node2(Node* node);
-    //virtual int detour_preOrder(Node* node, int (Btree::*max)(Node* node, int max));
-    //virtual Node* detour_inOrder(Node* node, int (Btree::* search)(Node* node, int max));
+    Node* detour_preOrder(Node* node);
+    Node* detour_inOrder(Node* node);
     Node* detour3_postOrder(Node* node);
-    virtual Node* search(Node *p1, int _key);
-private:
-    void print2DUtil(Node *root, int space);
-
+    private:
+    Node* search(Node *p1, int _key);
+    static void deleting(Node* node);
+    void constructor1(vector<int>);
     int max(Node* node, int max);
     int min(Node* node, int max);
     void add(int value, Node* node);
+
+    void print_tree(const std::string& prefix, const Node* node, bool isLeft);
+
+
 };
 
 #endif

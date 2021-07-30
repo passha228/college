@@ -1,6 +1,7 @@
 #include "include/Btree.h"
 #include <random>
 #include <ctime>
+#include <utility>
 
 ////////////////////////////////////////////////////////////////////
 //						конструкторы 							////
@@ -18,61 +19,18 @@ Btree::Btree(int value)
 
 Btree::Btree(int* mas, int n)
 {
-	root = new Node(mas[0]);
-	int i = 1;
-	Node* p = root;
-    std::srand(time(nullptr));
-	while(i != n)
-	{
-		if (p->left == nullptr)
-		{
-			p->left = new Node[mas[i]];
-			p->left->par = p;
-			i++;
-		}
-		else if (p->right == nullptr)
-		{
-			p->right = new Node[mas[i]];
-            p->right->par = p;
-			i++;
-		}
-		else
-		{
-			//ïî÷èòàòü ïðî óëó÷øåííóþ ðàíäîìíîñòü è ðåàëèçîâàòü åå çäåñü
-			bool random = rand() % 2;
-			random ? p = p->left : p = p->right;
-		}
-	}
+    vector<int> a;
+    for(int i = 0; i < n; i++) {
+        a.push_back(mas[i]);
+    }
+    constructor1(a);
 }
 
 Btree::Btree(vector<int> mas)
 {
-	root = new Node(mas[0]);
-	int i = 1;
-	Node* p = root;
-	std::srand(time(nullptr));
-	while (i != mas.size())
-	{
-		if (p->left == nullptr)
-		{
-			p->left = new Node[mas[i]];
-            p->left->par = p;
-			i++;
-		}
-		else if (p->right == nullptr)
-		{
-			p->right = new Node[mas[i]];
-            p->right->par = p;
-			i++;
-		}
-		else
-		{
-			//ïî÷èòàòü ïðî óëó÷øåííóþ ðàíäîìíîñòü è ðåàëèçîâàòü åå çäåñü
-			bool random = rand() % 2;
-			random ? p = p->left : p = p->right;
-		}
-	}
-
+    if(this->root != nullptr)
+        this->~Btree();
+    constructor1(std::move(mas));
 }
 
 Btree::Btree(const Btree& tree)
@@ -82,15 +40,43 @@ Btree::Btree(const Btree& tree)
 	root->right = create_node(tree.root->right, root);
 }
 
-//ôóíêöèÿ äëÿ êîïèðîâàíèÿ äåðåâà
 Node* Btree::create_node(Node* tmp, Node* pp)
-{	if (!tmp)  return nullptr;   // ÿâíàÿ òî÷êà îñòàíîâêè ðåêóðñèè
+{	if (!tmp)
+        return nullptr;
 	Node* t = new Node(tmp->value, nullptr, nullptr, pp, 0);
 	t->left = create_node(tmp->left, t);
 	t->right = create_node(tmp->right, t);
 	return t;
 }
 
+void Btree::constructor1(vector<int> mas) {
+    //Node * node = new Node(mas[0]);
+    root = new Node(mas[0]);
+    int i = 1;
+    Node* p = root;
+    std::srand(time(nullptr));
+    while (i != mas.size())
+    {
+        if (p->left == nullptr)
+        {
+            p->left = new Node(mas[i]);
+            p->left->par = p;
+            i++;
+        }
+        else if (p->right == nullptr)
+        {
+            p->right = new Node(mas[i]);
+            p->right->par = p;
+            i++;
+        }
+        else
+        {
+            //ïî÷èòàòü ïðî óëó÷øåííóþ ðàíäîìíîñòü è ðåàëèçîâàòü åå çäåñü
+            bool random = rand() % 2;
+            random ? p = p->left : p = p->right;
+        }
+    }
+}
 
 ////////////////////////////////////////////////////////////////////
 //						перегрузки операторов					////
@@ -122,12 +108,13 @@ int Btree::max(Node* node, int max)
     int _max = node->value;
     if(node)
     {
-        int locale = _max;
-        node->left ? locale = this->max(node->left, _max) : 0;
-        _max > locale ? _max = _max: _max = locale;
+        int locale1 = _max;
+        int locale2 = _max;
+        node->left ? locale1 = this->max(node->left, _max) : node->value;
+        _max > locale1 ? _max = _max: _max = locale1;
 
-        node -> right? locale = this->max(node->right, _max) : 0;
-        _max > locale ? _max = _max: _max = locale;
+        node -> right? locale2 = this->max(node->right, _max) : 0;
+        _max > locale2 ? _max = _max: _max = locale2;
     }
     return _max;
 }
@@ -179,16 +166,6 @@ Node* Btree::Search(int _key)
     return p;
 }
 
-//Node* Btree::detour_inOrder(Node* node, int (Btree::* search)(Node* node, int max))
-//{
-//	if (node) {
-//		detour_inOrder(node->left, search);
-//		return node;
-//		detour_inOrder(node->right, search);
-//	}
-//}
-
-
 ////////////////////////////////////////////////////////////////////
 //				удаление ключа									////
 ////////////////////////////////////////////////////////////////////
@@ -202,6 +179,7 @@ void Btree::Del(int value)
     else
         del_node2(p);
     delete p;
+    p = nullptr;
 }
 
 
@@ -219,15 +197,22 @@ void Btree::del_node1(Node* node)
 {
 	Node* pr = node->par;
 	if (!node->left && !node->right)     // p - ëèñò
-		if (pr->left == node) pr->left = 0;
-		else  pr->right = 0;
+		if (pr->left == node)
+		    pr->left = 0;
+		else
+		    pr->right = 0;
 	else  // p – íå ëèñò, ó íåãî 1 ïîòîìîê
 	{
 		Node* s;
-		if (node->left) s = node->left; else s = node->right;
+		if (node->left)
+		    s = node->left;
+		else
+		    s = node->right;
 		//changeLink(p, s);
-		if (pr->left == node) pr->left = s;
-		else  pr->right = s;
+		if (pr->left == node)
+		    pr->left = s;
+		else
+		    pr->right = s;
 		s->par = pr;
 	}
 }
@@ -250,6 +235,7 @@ void Btree::del_node2(Node* p)
 		change_link(p, s); // ìåíÿåì ñâÿçè
 	}
 }
+
 void Btree::delete_root() {
     if(root->left == nullptr && root->right == nullptr)
         delete root;
@@ -278,23 +264,30 @@ void Btree::delete_root() {
 
 }
 
+void Btree::deleting(Node* node)
+{
+    if (node) {
+        deleting(node->left);
+        deleting(node->right);
+        delete node;
+    }
+    else return;
+}
+
 Btree::~Btree()
 {
-
-    while(root ->left != nullptr || root->right != nullptr)
-    {
-        if(root->left!=nullptr)
-            this->Del(root->left->value);
-        if(root->right!=nullptr)
-            this->Del(root->right->value);
-    }
-    delete root;
+    deleting(root);
 }
 
 
 ////////////////////////////////////////////////////////////////////
 //				добавление 										////
 ////////////////////////////////////////////////////////////////////
+
+void Btree::Add(Node * node)
+{
+    this->Add(node->value);
+}
 
 void Btree::Add(int value)
 {
@@ -318,7 +311,7 @@ void Btree::add(int value, Node* node)
 {
 	if (!node->left) {
 	    node->left = new Node(value);
-        node->right->par = node;
+        node->left->par = node;
 	    return; }
 	if (!node->right) {
 	    node->right = new Node(value);
@@ -330,45 +323,51 @@ void Btree::add(int value, Node* node)
 	    return  add(value, node->right);
 }
 
-
-
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 Node* Btree::detour3_postOrder(Node* node)
 {
-	if (node) {
-		detour3_postOrder(node->left);
-		detour3_postOrder(node->right);
-		return node;
-	}
-	else return nullptr;
+    if (node == nullptr) return nullptr;
+    detour_inOrder(node->left);
+    detour_inOrder(node->right);
+    return node;
+}
+
+Node* Btree::detour_inOrder(Node *node) {
+    if (node == nullptr) return nullptr;
+    detour_inOrder(node->left);
+    return node;
+    detour_inOrder(node->right);
+}
+
+Node* Btree::detour_preOrder(Node *node) {
+    if (node == nullptr) return nullptr;
+    return node;
+    detour_preOrder(node->left);
+    detour_preOrder(node->right);
+}
+
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+void Btree::Print() {
+    print_tree("", root, false);
 }
 
 
-void Btree::print2DUtil(Node *node, int space)
-{
-    // Base case
-    if (node == nullptr)
-        return;
+void Btree::print_tree(const std::string& prefix, const Node* node, bool isLeft) {
+    if( node != nullptr )
+    {
+        std::cout << prefix;
 
-    // Increase distance between levels
-    space += 10;
+        std::cout << (isLeft ? "|--" : "\\--" );
 
-    // Process right child first
-    print2DUtil(node->right, space);
+        // print the value of the node
+        std::cout << node->value << std::endl;
 
-    // Print current node after space
-    // count
-    cout<<endl;
-    for (int i = 10; i < space; i++)
-        cout<<" ";
-    cout<<node->value<<"\n";
-
-    // Process left child
-    print2DUtil(node->left, space);
-}
-
-// Wrapper over print2DUtil()
-void Btree::print2D()
-{
-    // Pass initial space count as 0
-    print2DUtil(root, 0);
+        // enter the next tree level - left and right branch
+        print_tree( prefix + (isLeft ? "|   " : "    "), node->left, true);
+        print_tree( prefix + (isLeft ? "|   " : "    "), node->right, false);
+    }
 }
