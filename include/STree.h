@@ -19,7 +19,7 @@ public:
 
     explicit STree(vector<int> mas);
 
-    virtual void Add(int val) override;
+    void Add(int val) override;
 
     int Max() override;
 
@@ -30,7 +30,7 @@ public:
 protected:
 
 private:
-    virtual Node* add(Node * node, int val);
+    Node* add(Node * node, int val);
 };
 
 

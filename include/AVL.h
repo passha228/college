@@ -11,21 +11,24 @@
 class AVL :public STree{
 public:
     AVL();
-    AVL(int);
+    explicit AVL(int);
     AVL(int*,int);
-    AVL(vector<int>);
-
-    void Add(int);
+    explicit AVL(vector<int>);
+    void Del(int) override;
+    void Add(int) final;
 
 private:
-    unsigned char height;
+    void parents(Node *);
     unsigned char Height(Node* p);
     void fix_height(Node* p);
     int bfactor(Node* p);
     Node * rotateR(Node*p);
     Node * rotateL(Node*p);
     Node * balance(Node* p);
-    Node* add(Node*,int) override;
+    Node* add(Node*,int);
+    Node* remove(Node*, int);
+    Node* findmin(Node* p);
+    Node* removemin(Node* p);
 };
 
 

@@ -5,7 +5,7 @@
 #include "AVL.h"
 
 AVL::AVL():STree() {
-    height=0;
+    this->root->height=0;
 }
 
 AVL::AVL(int val)
@@ -55,6 +55,7 @@ Node* AVL::rotateR(Node* head) {
     newhead->right = head;
     head->height = 1+std::max(Height(head->left), Height(head->right));
     newhead->height = 1+std::max(Height(newhead->left), Height(newhead->right));
+    parents(root);
     return newhead;
 }
 
@@ -64,18 +65,24 @@ Node * AVL::rotateL(Node *head) {
     newhead->left = head;
     head->height = 1+std::max(Height(head->left), Height(head->right));
     newhead->height = 1+std::max(Height(newhead->left), Height(newhead->right));
+    parents(root);
     return newhead;
 }
 
 Node *AVL::balance(Node *p) {
     fix_height(p);
-    if( bfactor(p)==2 )
+    if(p->left && p->right)
+    {
+        fix_height(p->right);
+        fix_height(p->left);
+    }
+    if( bfactor(p)>=2 )
     {
         if( bfactor(p->right) < 0 )
             p->right = rotateR(p->right);
         return rotateL(p);
     }
-    if( bfactor(p)==-2 )
+    if( bfactor(p)<=-2 )
     {
         if( bfactor(p->left) > 0  )
             p->left = rotateL(p->left);
@@ -87,6 +94,7 @@ Node *AVL::balance(Node *p) {
 void AVL::Add(int k) // вставка ключа k в дерево с корнем p
 {
     root = add(root, k);
+    parents(root);
 }
 
 Node* AVL::add(Node*head, int x)
@@ -117,4 +125,52 @@ Node* AVL::add(Node*head, int x)
         }
     }
     return head;
+}
+
+void AVL::parents(Node *node) {
+    if(!node)
+        return;
+    if(node->left)
+        node->left->par = node;
+    if(node->right)
+        node->right->par = node;
+    parents(node->left);
+    parents(node->right);
+}
+
+void AVL::Del(int a) {
+    remove(root, a);
+}
+
+Node* AVL::remove(Node *p, int k) {
+    if( !p ) return nullptr;
+    if( k < p->value )
+        p->left = remove(p->left,k);
+    else if( k > p->value )
+        p->right = remove(p->right,k);
+    else //  k == p->key
+    {
+        Node* q = p->left;
+        Node* r = p->right;
+        delete p;
+        if( !r ) return q;
+        Node* min = findmin(r);
+        min->right = removemin(r);
+        min->left = q;
+        return balance(min);
+    }
+    return balance(p);
+}
+
+Node* AVL::findmin(Node* p) // поиск узла с минимальным ключом в дереве p
+{
+    return p->left?findmin(p->left):p;
+}
+
+Node* AVL::removemin(Node* p) // удаление узла с минимальным ключом из дерева p
+{
+    if( p->left== nullptr )
+        return p->right;
+    p->left = removemin(p->left);
+    return balance(p);
 }

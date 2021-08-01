@@ -6,17 +6,17 @@
 //						конструкторы 							////
 ////////////////////////////////////////////////////////////////////
 
-[[maybe_unused]] Btree::Btree()
+Btree::Btree()
 {
 	root = nullptr;
 }
 
-[[maybe_unused]] Btree::Btree(int value)
+Btree::Btree(int value)
 {
 	root = new Node(value);
 }
 
-[[maybe_unused]] Btree::Btree(int* mas, int n)
+Btree::Btree(int* mas, int n)
 {
     vector<int> a;
     for(int i = 0; i < n; i++) {
@@ -25,14 +25,14 @@
     constructor1(a);
 }
 
-[[maybe_unused]] Btree::Btree(vector<int> mas)
+Btree::Btree(vector<int> mas)
 {
     if(this->root != nullptr)
         this->~Btree();
     constructor1(std::move(mas));
 }
 
-[[maybe_unused]] Btree::Btree(const Btree& tree)
+Btree::Btree(const Btree& tree)
 {
 	root = new Node(tree.root->value);
 	root->left = create_node(tree.root->left, root);
@@ -103,42 +103,34 @@ bool Btree::operator==(const Btree &tree){
 
 int Btree::Max()
 {
-    return max(root, root->value);
+    return max(root);
 }
 
-int Btree::max(Node* node, int max)
+int Btree::max(Node* node)
 {
     int _max = node->value;
-    if(node)
-    {
-        int locale1 = _max;
-        int locale2 = _max;
-        node->left ? locale1 = this->max(node->left, _max) : node->value;
-        _max > locale1 ? _max = _max: _max = locale1;
-
-        node -> right? locale2 = this->max(node->right, _max) : 0;
-        _max > locale2 ? _max = _max: _max = locale2;
-    }
+    int locale1 = _max;
+    int locale2 = _max;
+    node->left ? locale1 = this->max(node->left) : node->value;
+    _max > locale1 ? _max = _max : _max = locale1;
+    node->right ? locale2 = this->max(node->right) : 0;
+    _max > locale2 ? _max = _max : _max = locale2;
     return _max;
 }
 
 int Btree::Min()
 {
-    return min(root, root->value);
+    return min(root);
 }
 
-int Btree::min(Node* node, int max)
+int Btree::min(Node* node)
 {
     int _min = node->value;
-    if(node)
-    {
-        int locale = _min;
-        node->left ? locale = this->min(node->left, _min) : 0;
-        _min < locale ? _min = _min: _min = locale;
-
-        node -> right? locale = this->min(node->right, _min) : 0;
-        _min < locale ? _min = _min: _min = locale;
-    }
+    int locale = _min;
+    node->left ? locale = this->min(node->left) : 0;
+    _min < locale ? _min = _min : _min = locale;
+    node->right ? locale = this->min(node->right) : 0;
+    _min < locale ? _min = _min : _min = locale;
     return _min;
 }
 
@@ -150,7 +142,7 @@ int Btree::min(Node* node, int max)
 
 Node* Btree::search(Node* p1, int _key)
 {
-    Node *p=0;
+    Node *p= nullptr;
     if (p1->value == _key) return p1;
     if (p1->left) p=search(p1->left, _key);
     if (p) return p;
@@ -160,11 +152,15 @@ Node* Btree::search(Node* p1, int _key)
 
 Node* Btree::Search(int _key)
 {
-    if (!root) return 0;
-    Node *p=0;
-    if (root->value == _key) return root;
-    if (root->left) p=search(root->left, _key);
-    if (p) return p;
+    if (!root)
+        return nullptr;
+    Node *p= nullptr;
+    if (root->value == _key)
+        return root;
+    if (root->left)
+        p=search(root->left, _key);
+    if (p)
+        return p;
     if (root->right) p=search(root->right, _key);
     return p;
 }
@@ -173,27 +169,38 @@ Node* Btree::Search(int _key)
 //				удаление ключа									////
 ////////////////////////////////////////////////////////////////////
 
-[[maybe_unused]] void Btree::Del(int value)
+void Btree::Del(int value)
 {
     Node *p = Search(value);
-    if (p==root)  delete_root();
+    if (!p) {
+        cerr << "error";
+        return;
+    }
+
+    if (p==root) {
+        delete_root();
+        return;
+    }
     else if (!p->left || !p->right)
         del_node1(p);
     else
         del_node2(p);
     delete p;
-    p = nullptr;
 }
 
 
 void Btree::change_link(Node* p, Node* s)
 {
-	Node* pr = p->par;  // pr - ïðåäîê p
-	s->left = p->left; s->right = p->right;  	//1
-	s->left->par = s;  s->right->par = s;		//2
-	s->par = pr;					//3
-	if (pr->left == p) pr->left = s;		//4
-	else  pr->right = s;
+	Node* pr = p->par;
+	s->left = p->left;
+	s->right = p->right;
+	s->left->par = s;
+	s->right->par = s;
+	s->par = pr;
+	if (pr->left == p)
+	    pr->left = s;
+	else
+	    pr->right = s;
 }
 
 void Btree::del_node1(Node* node)
@@ -201,9 +208,9 @@ void Btree::del_node1(Node* node)
 	Node* pr = node->par;
 	if (!node->left && !node->right)     // p - ëèñò
 		if (pr->left == node)
-		    pr->left = 0;
+		    pr->left = nullptr;
 		else
-		    pr->right = 0;
+		    pr->right = nullptr;
 	else  // p – íå ëèñò, ó íåãî 1 ïîòîìîê
 	{
 		Node* s;
@@ -222,7 +229,7 @@ void Btree::del_node1(Node* node)
 
 void Btree::del_node2(Node* p)
 {
-	Node* s, * t, * pr = p->par;
+	Node* s, * pr = p->par;
 	s = p->right;
 	if (!s->left)
 	{
@@ -262,7 +269,9 @@ void Btree::delete_root() {
             node->value = node->right->value;
             node=node->right;
         }
+        Node *node1 = node->par;
         delete node;
+        node1->right = nullptr;
     }
 
 }
@@ -329,24 +338,27 @@ void Btree::add(int value, Node* node)
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
-[[maybe_unused]] Node* Btree::detour3_postOrder(Node* node)
+Node* Btree::detour3_postOrder(Node* node)
 {
     if (node == nullptr) return nullptr;
     detour_inOrder(node->left);
     detour_inOrder(node->right);
-    return node;
+    //return node;
+    //действия
 }
 
 Node* Btree::detour_inOrder(Node *node) {
     if (node == nullptr) return nullptr;
     detour_inOrder(node->left);
-    return node;
+    //return node;
+    //действия
     detour_inOrder(node->right);
 }
 
 Node* Btree::detour_preOrder(Node *node) {
     if (node == nullptr) return nullptr;
-    return node;
+    //return node;
+    //действия
     detour_preOrder(node->left);
     detour_preOrder(node->right);
 }
